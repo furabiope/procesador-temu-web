@@ -11,19 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
     let processedData = null;
 
     // Evento al seleccionar archivo
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length) {
-            fileName.textContent = e.target.files[0].name;
-            processBtn.disabled = false;
-            resultDiv.classList.add('hidden');
-        }
-    });
-
-    // Procesar archivo
+    // Función para eliminar columnas no deseadas
+    function eliminarColumnas(jsonData, columnasAEliminar) {
+        return jsonData.map(row => {
+            const nuevoRow = {...row};
+            columnasAEliminar.forEach(col => delete nuevoRow[col]);
+            return nuevoRow;
+        });
+    }
+    
+    // Modifica el evento de clic del botón "Procesar"
     processBtn.addEventListener('click', () => {
         const file = fileInput.files[0];
         if (!file) return;
-
+    
         updateProgress(10, "Leyendo archivo...");
         
         const reader = new FileReader();
@@ -34,23 +35,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Leer el archivo Excel
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                let jsonData = XLSX.utils.sheet_to_json(firstSheet);
                 
-                // Simular procesamiento (DEMO)
-                setTimeout(() => {
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-                    
-                    // Mostrar primeras 5 filas como demo
-                    const demoData = jsonData.slice(0, 5).map(row => row.join('\t')).join('\n');
-                    output.textContent = demoData;
-                    
-                    // Guardar datos para descarga
-                    processedData = workbook;
-                    
-                    updateProgress(100, "¡Completado!");
-                    resultDiv.classList.remove('hidden');
-                    downloadBtn.classList.remove('hidden');
-                }, 1000);
+                // Columnas a eliminar (ajusta según tus necesidades)
+                const columnasAEliminar = ["DNI", "RUC", "Names and Surnames"]; 
+                
+                // Eliminar columnas
+                jsonData = eliminarColumnas(jsonData, columnasAEliminar);
+                
+                // Crear nuevo libro de trabajo sin las columnas
+                const newWorkbook = XLSX.utils.book_new();
+                const newWorksheet = XLSX.utils.json_to_sheet(jsonData);
+                XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, "Datos Procesados");
+                
+                // Mostrar preview (primeras 5 filas)
+                updateProgress(70, "Preparando resultados...");
+                output.textContent = JSON.stringify(jsonData.slice(0, 5), null, 2);
+                
+                // Guardar datos para descarga
+                processedData = newWorkbook;
+                
+                updateProgress(100, "¡Completado!");
+                resultDiv.classList.remove('hidden');
+                downloadBtn.classList.remove('hidden');
             } catch (error) {
                 output.textContent = `Error: ${error.message}`;
                 updateProgress(0, "Error en el procesamiento");
