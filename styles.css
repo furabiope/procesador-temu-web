@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+.upload-box {
+    border: 2px dashed #3498db;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+    border-radius: 5px;
+    background-color: #f8fafc;
+}
+
+#fileInput {
+    display: none;
+}
+
+.upload-box label {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #3498db;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.upload-box label:hover {
+    background: #2980b9;
+}
+
+#fileName {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #27ae60;
+}
+
+button:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.progress-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+progress {
+    flex-grow: 1;
+    height: 20px;
+    border-radius: 10px;
+}
+
+#progressText {
+    font-size: 0.9em;
+    color: #3498db;
+}
+
+.hidden {
+    display: none;
+}
+
+#output {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+#downloadBtn {
+    background: #e67e22;
+}
+
+#downloadBtn:hover {
+    background: #d35400;
+}
